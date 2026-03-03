@@ -1,0 +1,77 @@
+import streamlit as st
+import joblib
+import numpy as np
+import nltk
+from nltk import RegexpTokenizer
+from nltk.corpus import stopwords
+from nltk.stem import SnowballStemmer
+
+nltk.download('stopwords', quiet=True)
+nltk.download('punkt',     quiet=True)
+nltk.download('punkt_tab', quiet=True)
+
+# ── Nombres de los ODS ──────────────────────────────────────────────────────
+ODS_nombres = {
+    1:  "Fin de la pobreza",
+    2:  "Hambre cero",
+    3:  "Salud y bienestar",
+    4:  "Educación de calidad",
+    5:  "Igualdad de género",
+    6:  "Agua limpia y saneamiento",
+    7:  "Energía asequible y no contaminante",
+    8:  "Trabajo decente y crecimiento económico",
+    9:  "Industria, innovación e infraestructura",
+    10: "Reducción de las desigualdades",
+    11: "Ciudades y comunidades sostenibles",
+    12: "Producción y consumo responsables",
+    13: "Acción por el clima",
+    14: "Vida submarina",
+    15: "Vida de ecosistemas terrestres",
+    16: "Paz, justicia e instituciones sólidas",
+    17: "Alianzas para lograr los objetivos",
+}
+
+# ── Preprocesamiento ─────────────────────────────────────────────────────────
+tokenizer = RegexpTokenizer(r'\w+')
+stemmer   = SnowballStemmer(language='spanish')
+stop      = set(stopwords.words('spanish'))
+
+def text_preprocess(text):
+    text   = text.lower()
+    tokens = tokenizer.tokenize(text)
+    tokens = [w for w in tokens if w not in stop]
+    tokens = [stemmer.stem(w) for w in tokens]
+    return ' '.join(tokens)
+
+# ── Cargar modelo (se cachea para no recargar en cada interacción) ───────────
+@st.cache_resource
+def cargar_modelo():
+    search = joblib.load('pipeline_svm_ods.pkl')
+    return search.best_estimator_
+
+# ── Interfaz ─────────────────────────────────────────────────────────────────
+st.title("Clasificador de Objetivos de Desarrollo Sostenible")
+st.write("Ingresa un texto en español y el modelo identificará a qué ODS pertenece.")
+
+texto = st.text_area("Texto a clasificar", height=150,
+                     placeholder="Escribe o pega aquí el texto...")
+
+if st.button("Clasificar"):
+    if not texto.strip():
+        st.warning("Por favor ingresa un texto antes de clasificar.")
+    else:
+        pipeline = cargar_modelo()
+        texto_proc = text_preprocess(texto)
+        pred       = pipeline.predict([texto_proc])[0]
+        probs      = pipeline.predict_proba([texto_proc])[0]
+        clases     = pipeline.classes_
+        top3_idx   = np.argsort(probs)[::-1][:3]
+
+        st.success(f"**ODS {pred} — {ODS_nombres.get(pred, 'Desconocido')}**")
+
+        st.write("##### Top 3 probabilidades")
+        for i in top3_idx:
+            ods_num  = int(clases[i])
+            ods_name = ODS_nombres.get(ods_num, '?')
+            prob     = probs[i] * 100
+            st.progress(int(prob), text=f"ODS {ods_num} — {ods_name}: {prob:.1f}%")
