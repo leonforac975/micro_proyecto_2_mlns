@@ -1,3 +1,4 @@
+# Librerias
 import os
 import streamlit as st
 import joblib
@@ -11,7 +12,7 @@ nltk.download('stopwords', quiet=True)
 nltk.download('punkt',     quiet=True)
 nltk.download('punkt_tab', quiet=True)
 
-# ── Nombres de los ODS ──────────────────────────────────────────────────────
+# Nombres de los ODS
 ODS_nombres = {
     1:  "Fin de la pobreza",
     2:  "Hambre cero",
@@ -32,7 +33,7 @@ ODS_nombres = {
     17: "Alianzas para lograr los objetivos",
 }
 
-# ── Preprocesamiento ─────────────────────────────────────────────────────────
+# Preprocesamiento
 tokenizer = RegexpTokenizer(r'\w+')
 stemmer   = SnowballStemmer(language='spanish')
 stop      = set(stopwords.words('spanish'))
@@ -44,14 +45,14 @@ def text_preprocess(text):
     tokens = [stemmer.stem(w) for w in tokens]
     return ' '.join(tokens)
 
-# ── Cargar modelo (se cachea para no recargar en cada interacción) ───────────
-@st.cache_resource
+# Cargar modelo
+@st.cache_resource # Se hace para no recargar el modelo en cada interacción
 def cargar_modelo():
     ruta = os.path.join(os.path.dirname(__file__), 'pipeline_svm_ods.pkl')
     search = joblib.load(ruta)
     return search.best_estimator_
 
-# ── Interfaz ─────────────────────────────────────────────────────────────────
+# Interfaz
 col1, col2 = st.columns([1, 4])
 
 with col1:
@@ -63,8 +64,7 @@ with col2:
     st.title("Clasificador de Objetivos de Desarrollo Sostenible")
     st.write("Ingresa un texto en español y el modelo identificará a qué ODS pertenece.")
 
-texto = st.text_area("Texto a clasificar", height=150,
-                     placeholder="Escribe o pega aquí el texto...")
+texto = st.text_area("Texto a clasificar", height=150, placeholder="Escribe o pega aquí el texto...")
 
 if st.button("Clasificar"):
     if not texto.strip():
