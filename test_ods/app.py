@@ -63,9 +63,6 @@ with col2:
     st.title("Clasificador de Objetivos de Desarrollo Sostenible")
     st.write("Ingresa un texto en español y el modelo identificará a qué ODS pertenece.")
 
-st.title("Clasificador de Objetivos de Desarrollo Sostenible")
-st.write("Ingresa un texto en español y el modelo identificará a qué ODS pertenece.")
-
 texto = st.text_area("Texto a clasificar", height=150,
                      placeholder="Escribe o pega aquí el texto...")
 
