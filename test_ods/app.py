@@ -52,6 +52,17 @@ def cargar_modelo():
     return search.best_estimator_
 
 # ── Interfaz ─────────────────────────────────────────────────────────────────
+col1, col2 = st.columns([1, 4])
+
+with col1:
+    logo_path = os.path.join(os.path.dirname(__file__), 'src', 'ODS_LOGO.jpg')
+    if os.path.exists(logo_path):
+        st.image(logo_path)
+
+with col2:
+    st.title("Clasificador de Objetivos de Desarrollo Sostenible")
+    st.write("Ingresa un texto en español y el modelo identificará a qué ODS pertenece.")
+
 st.title("Clasificador de Objetivos de Desarrollo Sostenible")
 st.write("Ingresa un texto en español y el modelo identificará a qué ODS pertenece.")
 
@@ -70,3 +81,10 @@ if st.button("Clasificar"):
         top3_idx   = np.argsort(probs)[::-1][:3]
 
         st.success(f"**ODS {pred} — {ODS_nombres.get(pred, 'Desconocido')}**")
+
+        imagen_path = os.path.join(os.path.dirname(__file__), 
+                           'src', f'ODS_{pred:02d}.jpg')
+        if os.path.exists(imagen_path):
+            st.image(imagen_path)
+        else:
+            st.warning(f"No se encontró la imagen para ODS {pred}")
