@@ -46,7 +46,7 @@ def text_preprocess(text):
     return ' '.join(tokens)
 
 # Cargar modelo
-@st.cache_resource # Se hace para no recargar el modelo en cada interacción
+@st.cache_resource # Se hace para no cargar el modelo en cada interacción
 def cargar_modelo():
     ruta = os.path.join(os.path.dirname(__file__), 'pipeline_svm_ods.pkl')
     search = joblib.load(ruta)
