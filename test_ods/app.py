@@ -70,10 +70,3 @@ if st.button("Clasificar"):
         top3_idx   = np.argsort(probs)[::-1][:3]
 
         st.success(f"**ODS {pred} — {ODS_nombres.get(pred, 'Desconocido')}**")
-
-        st.write("##### Top 3 probabilidades")
-        for i in top3_idx:
-            ods_num  = int(clases[i])
-            ods_name = ODS_nombres.get(ods_num, '?')
-            prob     = probs[i] * 100
-            st.progress(int(prob), text=f"ODS {ods_num} — {ods_name}: {prob:.1f}%")
