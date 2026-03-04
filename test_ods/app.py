@@ -64,7 +64,7 @@ with col2:
     st.title("Clasificador de Objetivos de Desarrollo Sostenible")
     st.write("Desarrollado por Ricardo Gutierrez y Leonardo Forero")
     st.write("Microproyecto 2 - Maestría en Inteligencia Artificial - Universidad de los Andes")
-#   st.write("Ingresa un texto en español y el modelo identificará a qué ODS pertenece.")
+    st.write("/n")
 
 texto = st.text_area("Ingresa un texto en español y el modelo identificará a qué ODS pertenece.", height=150, placeholder="Escribe o pega aquí el texto...")
 
@@ -79,10 +79,9 @@ if st.button("Clasificar"):
         clases     = pipeline.classes_
         top3_idx   = np.argsort(probs)[::-1][:3]
 
-        st.success(f"**ODS {pred} — {ODS_nombres.get(pred, 'Desconocido')}**")
+        st.success(f"ODS {pred} — {ODS_nombres.get(pred, 'Desconocido')}")
 
-        imagen_path = os.path.join(os.path.dirname(__file__), 
-                           'src', f'ODS_{pred:02d}.jpg')
+        imagen_path = os.path.join(os.path.dirname(__file__), 'src', f'ODS_{pred:02d}.jpg')
         if os.path.exists(imagen_path):
             st.image(imagen_path)
         else:
