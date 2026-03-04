@@ -64,7 +64,7 @@ with col2:
     st.title("Clasificador de Objetivos de Desarrollo Sostenible")
     st.write("Desarrollado por Ricardo Gutierrez y Leonardo Forero")
     st.write("Microproyecto 2 - Maestría en Inteligencia Artificial - Universidad de los Andes")
-    st.write("/n")
+    st.write(" ")
 
 texto = st.text_area("Ingresa un texto en español y el modelo identificará a qué ODS pertenece.", height=150, placeholder="Escribe o pega aquí el texto...")
 
