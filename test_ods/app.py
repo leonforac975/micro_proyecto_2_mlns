@@ -46,7 +46,8 @@ def text_preprocess(text):
 # ── Cargar modelo (se cachea para no recargar en cada interacción) ───────────
 @st.cache_resource
 def cargar_modelo():
-    search = joblib.load('pipeline_svm_ods.pkl')
+    ruta = os.path.join(os.path.dirname(__file__), 'pipeline_svm_ods.pkl')
+    search = joblib.load(ruta)
     return search.best_estimator_
 
 # ── Interfaz ─────────────────────────────────────────────────────────────────
