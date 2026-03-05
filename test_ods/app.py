@@ -76,9 +76,6 @@ if st.button("Clasificar"):
         pipeline = cargar_modelo()
         texto_proc = text_preprocess(texto)
         pred       = pipeline.predict([texto_proc])[0]
-        probs      = pipeline.predict_proba([texto_proc])[0]
-        clases     = pipeline.classes_
-        top3_idx   = np.argsort(probs)[::-1][:3]
 
         st.success(f"ODS {pred} — {ODS_nombres.get(pred, 'Desconocido')}")
 
